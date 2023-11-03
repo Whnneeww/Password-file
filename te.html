@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>16x16の画像作成プログラム</title>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="16" height="16"></canvas>
+    
+    <script>
+      // キャンバス要素を取得
+      var canvas = document.getElementById("myCanvas");
+      var context = canvas.getContext("2d");
+      
+      // 画像を作成
+      var pixels = [
+        [0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],[0, 128, 0],
+      ];
+      
+      for (var i = 0; i < 16; i++) {
+        for (var j = 0; j < 16; j++) {
+          // ピクセルの色を設定
+          var color = "rgb(" + pixels[i][j][0] + "," + pixels[i][j][1] + "," + pixels[i][j][2] + ")";
+          
+          // ピクセルを描画
+          context.fillStyle = color;
+          context.fillRect(i, j, 1, 1);
+        }
+      }
+      
+      // 画像を保存
+      var image = canvas.toDataURL("image/png");
+      var link = document.createElement("a");
+      link.href = image;
+      link.download = "image.png";
+      link.click();
+    </script>
+  </body>
+</html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>画像作成プログラム</title>
+    <title>16x16の画像作成プログラム</title>
   </head>
   <body>
-    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <canvas id="myCanvas" width="16" height="16"></canvas>
     
     <script>
       // キャンバス要素を取得
@@ -12,8 +12,19 @@
       var context = canvas.getContext("2d");
       
       // 画像を作成
-      context.fillStyle = "#000000";
-      context.fillRect(50, 50, 200, 200);
+      for (var i = 0; i < 16; i++) {
+        for (var j = 0; j < 16; j++) {
+          // ピクセルの色を設定
+          var red = i * 16;
+          var green = j * 16;
+          var blue = 0;
+          var color = "rgb(" + red + "," + green + "," + blue + ")";
+          
+          // ピクセルを描画
+          context.fillStyle = color;
+          context.fillRect(i, j, 1, 1);
+        }
+      }
       
       // 画像を保存
       var image = canvas.toDataURL("image/png");

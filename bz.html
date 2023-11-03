@@ -12,13 +12,16 @@
       var context = canvas.getContext("2d");
       
       // 画像を作成
+      var pixels = [
+        [255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0],
+        [255, 0, 255], [0, 255, 255], [128, 0, 0], [0, 128, 0],
+        // 以下、続く...
+      ];
+      
       for (var i = 0; i < 16; i++) {
         for (var j = 0; j < 16; j++) {
           // ピクセルの色を設定
-          var red = i * 16;
-          var green = j * 16;
-          var blue = 0;
-          var color = "rgb(" + red + "," + green + "," + blue + ")";
+          var color = "rgb(" + pixels[i][j][0] + "," + pixels[i][j][1] + "," + pixels[i][j][2] + ")";
           
           // ピクセルを描画
           context.fillStyle = color;

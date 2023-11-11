@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>文章読み上げプログラム</title>
+</head>
+<body>
+  <div id="text-to-read">読み上げる文章</div>
+  
+  <select id="language-select">
+    <option value="ja-JP">日本語</option>
+    <option value="en-US">English</option>
+  </select>
+  
+  <script>
+    const textToRead = document.getElementById('text-to-read');
+    const languageSelect = document.getElementById('language-select');
+  
+    languageSelect.addEventListener('change', function() {
+      const selectedLanguage = languageSelect.value;
+      speak(textToRead.innerText, selectedLanguage);
+    });
+  
+    function speak(text, lang) {
+      const speechSynthesis = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>

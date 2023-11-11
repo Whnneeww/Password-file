@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文字を読み上げるプログラム</title>
+    <script>
+        function speakText() {
+            var text = document.getElementById('textInput').value; // テキストエリアの入力値を取得
+            var speech = new SpeechSynthesisUtterance(text); // 読み上げるテキストを設定
+            window.speechSynthesis.speak(speech); // テキストを読み上げる
+        }
+    </script>
+</head>
+<body>
+    <h1>文字を読み上げるプログラム</h1>
+    <textarea id="textInput" rows="4" cols="50"></textarea><br>
+    <button onclick="speakText()">読み上げる</button>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QRコードリーダー</title>
+    <style>
+        #videoElement {
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <h1>QRコードリーダー</h1>
+    <video id="videoElement"></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script src="https://rawgit.com/LazarSoft/jsqrcode/master/src/qr_packed.js"></script>
+    <script>
+        // カメラへのアクセス
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function (stream) {
+                var video = document.getElementById("videoElement");
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function (error) {
+                console.error("カメラへのアクセスに失敗しました: ", error);
+            });
+
+        // カメラから画像をキャプチャ
+        function captureImage() {
+            var video = document.getElementById("videoElement");
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // QRコードの読み取り
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            var code = jsQR(imageData.data, imageData.width, imageData.height);
+            if (code) {
+                console.log("QRコードの内容: ", code.data);
+            } else {
+                console.log("QRコードが見つかりませんでした。");
+            }
+        }
+
+        // 一定間隔で画像をキャプチャしてQRコードを読み取る
+        setInterval(captureImage, 1000);
+    </script>
+</body>
+</html>

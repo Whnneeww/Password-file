@@ -1,0 +1,19 @@
+from aiohttp import web, ClientSession
+
+async def handle_request(request):
+    async with ClientSession() as session:
+        # リクエストのメソッドとURLを取得
+        method = request.method
+        url = 'https://trendect.online' + request.rel_url.path
+        
+        # 元のリクエストのデータを転送（必要に応じてヘッダーやボディを調整）
+        async with session.request(method, url, params=request.query, data=await request.read(), headers=request.headers) as response:
+            # レスポンスを取得し、元のクライアントに転送
+            body = await response.read()
+            return web.Response(body=body, status=response.status, headers=response.headers)
+
+app = web.Application()
+app.router.add_route('*', '/{tail:.*}', handle_request)  # 全てのリクエストをハンドラーに転送
+
+if __name__ == '__main__':
+    web.run_app(app, port=8080)  

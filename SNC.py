@@ -1,56 +1,58 @@
-import socket
-import json  
-# DNSサーバーのIPとポート 
-HOST = '0.0.0.0' # すべてのインターフェースでリッスン 
-PORT = 2559 FORWARD_DNS = '1.1.1.1' 
-FORWARD_PORT = 53  # JSONファイルからDNSレコードを読み込む
-with open('dns.json', 'r') as file:
-  dns_records = json.load(file) 
-  def create_response(transaction_id, question, record_type, record_info):
-    response = bytearray() 
-    response.extend(transaction_id) # トランザクションID 
-response.extend(b'\x81\x80') # 標準のレスポンス 
-response.extend(b'\x00\x01') # 質問数 
-response.extend(b'\x00\x01') # 応答数 
-response.extend(b'\x00\x00')# 権威数 
-response.extend(b'\x00\x00')# 追加数  # 質問セクション
-response.extend(question) # オリジナルのリクエストをそのまま 
-response.extend(b'\xC0\x0C') # 指示名 (example.com)
-response.extend(record_type) # タイプ (A, CNAME) 
-response.extend(b'\x00\x01') # クラス (IN)
-response.extend(socket.htons(record_info['ttl']).to_bytes(4, byteorder='big'))
-# TTL  # レコードの追加 
-if record_type == b'\x00\x01': # Aレコード 
-  response.extend(socket.inet_aton(record_info['address'])) 
-elif record_type == b'\x05': # CNAMEレコード 
-  cname = record_info['address']
-  response.extend(cname.encode('utf-8') + b'\x00') # CNAMEはNULL終端 
-return response  
-def forward_request(data):
-  with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
-  as forward_sock: 
-    forward_sock.sendto(data, (FORWARD_DNS, FORWARD_PORT)) 
-    return forward_sock.recv(512)
-# 応答を待つ  
-    def start_dns_server(): 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-      sock.bind((HOST, PORT)) print(f"DNSサーバーがポート {PORT} で起動しました。")  
-      while True: data, addr = sock.recvfrom(512) # DNSパケットの最大サイズは512バイト 
-transaction_id = data[:2] question_start = 12 # 質問セクションの開始位置 
-question_end = data.find(b'\x00', question_start) + 5 
-question = data[question_start:question_end] 
-qtype = data[question_end-4:question_end-2] # タイプ 
-domain = question.decode('utf-8').rstrip('.')  # レコードの存在をチェック 
-if domain in dns_records: record_info = dns_records[domain] 
-  if qtype == b'\x00\x01' and 'CNAME' in record_info: 
-    print("エラー: AレコードとCNAMEレコードが同時に設定されています。") continue 
-    if qtype == b'\x05' and 'A' in record_info:
-      print("エラー: CNAMEレコードとAレコードが同時に設定されています。") continue  
-      if qtype in record_info:
-        response = create_response(transaction_id, question, qtype, record_info[qtype]) 
-      else:
-        response = forward_request(data) # 外部DNSに問い合わせ 
-      else:
-        response = forward_request(data) # 外部DNSに問い合わせ  # レスポンスをクライアントに送信 
-sock.sendto(response, addr)  if __name__ == "__main__": 
-start_dns_server()
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtCore import QUrl, QTimer
+import json 
+from os import getenv
+import subprocess 
+import datetime
+
+class Browser(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        
+        # ウェブエンジンビューを初期化
+        self.browser = QWebEngineView()
+        self.setCentralWidget(self.browser)
+
+        # UIを強くシンプルにし、ボタンを作成
+        self.create_buttons()
+         #ウィンドウの情報を取得
+        with open('ada.json', 'r', encoding='utf-8') as file: 
+          data = json.load(file)
+          windtitle = data['title']
+          windresizex = data['x']
+          windresizey = data['y']
+          mintl = data['deta']
+        # ウィンドウタイトルを設定
+        self.setWindowTitle(windtitle)   
+        self.resize(windresizex, windresizey)  # ウィンドウサイズの設定
+        self.show()  # 先にUIを表示する
+        if mintl=="info":
+                pass
+        else:
+                batch_file = mintl  # バッチファイルを実行 
+               result = subprocess.run(batch_file, capture_output=True, text=True, shell=True)  
+                # 現在の日時を取得 
+                now = datetime.datetime.now() 
+                timestamp = now.strftime('%Y/%m/%d/%H:%M:%S')  
+                # ログメッセージを構成 
+                log_entry = f"{timestamp}: {result.stdout.strip() 
+                if result.stdout 
+                     else result.stderr.strip()}\n"  # clog.txtに追記 
+                     with open('clog.txt', 'a', encoding='utf-8') as log_file: 
+                          log_file.write(log_entry)
+    
+
+    def load_url(self, start_url):
+        # タイマーを使用してURLを読み込む
+        QTimer.singleShot(1, lambda: self.browser.setUrl(QUrl(start_url)))
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    start_url = "www/index.html" #wwwフォルダー内のindex.htmlを相対パスで参照
+    window = Browser()  # 初期化しただけのブラウザを作成
+    window.load_url(start_url)  # ここで初めてURLを読み込む
+    sys.exit(app.exec_())

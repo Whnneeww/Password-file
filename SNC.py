@@ -25,6 +25,8 @@ class Browser(QMainWindow):
         # ウィンドウタイトルを設定
         self.setWindowTitle(windtitle)   
         self.resize(windresizex, windresizey)  # ウィンドウサイズの設定
+        icon_path = os.path.join(os.getcwd(), 'icon.ico') # 同階層のアイコンを参照 
+        self.setWindowIcon(QtGui.QIcon(icon_path))
         self.show()  # 先にUIを表示する
         if mintl=="info":
                 pass

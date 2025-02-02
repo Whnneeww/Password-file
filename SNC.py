@@ -15,9 +15,7 @@ class Browser(QMainWindow):
         self.browser = QWebEngineView()
         self.setCentralWidget(self.browser)
 
-        # UIを強くシンプルにし、ボタンを作成
-        self.create_buttons()
-         #ウィンドウの情報を取得
+        #ウィンドウの情報を取得
         with open('ada.json', 'r', encoding='utf-8') as file: 
           data = json.load(file)
           windtitle = data['title']
@@ -32,16 +30,7 @@ class Browser(QMainWindow):
                 pass
         else:
                 batch_file = mintl  # バッチファイルを実行 
-               result = subprocess.run(batch_file, capture_output=True, text=True, shell=True)  
-                # 現在の日時を取得 
-                now = datetime.datetime.now() 
-                timestamp = now.strftime('%Y/%m/%d/%H:%M:%S')  
-                # ログメッセージを構成 
-                log_entry = f"{timestamp}: {result.stdout.strip() 
-                if result.stdout 
-                     else result.stderr.strip()}\n"  # clog.txtに追記 
-                     with open('clog.txt', 'a', encoding='utf-8') as log_file: 
-                          log_file.write(log_entry)
+                result = subprocess.run(batch_file, capture_output=True, text=True, shell=True)
     
 
     def load_url(self, start_url):

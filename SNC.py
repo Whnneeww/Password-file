@@ -1,12 +1,11 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import QUrl, QTimer
+import sys 
+import os 
 import json 
-from os import getenv
 import subprocess 
-import datetime
-
+from PyQt5.QtWidgets import QApplication, QMainWindow 
+from PyQt5.QtWebEngineWidgets import QWebEngineView 
+from PyQt5.QtCore import QUrl, QTimer, Qt 
+from PyQt5 import QtGui
 class Browser(QMainWindow):
     def __init__(self):
         super().__init__()

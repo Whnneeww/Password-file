@@ -40,8 +40,10 @@ class Browser(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
-    start_url = "www/index.html" #wwwフォルダー内のindex.htmlを相対パスで参照
+    # 現在の作業ディレクトリを取得 
+    current_directory = os.getcwd() # 現在の作業ディレクトリを取得  
+    # www/index.htmlへの絶対パスを生成 
+    start_url = QUrl.fromLocalFile(os.path.join(current_directory, 'www', 'index.html')) # 絶対パスを生成
     window = Browser()  # 初期化しただけのブラウザを作成
     window.load_url(start_url)  # ここで初めてURLを読み込む
     sys.exit(app.exec_())
